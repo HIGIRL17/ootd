@@ -1,0 +1,121 @@
+<div class=="container shadow-sm" style="width:100%; height:100%;  background-color:#f6f7f8; border-radius:5px;">
+  <div class="row">
+    <div class="col-12 pt-3" style="border-bottom:solid 1px #ddd; background-color:#fff;">
+      <div class="col-8 offset-2">
+        <div class="mb-4">
+          <%= link_to "OOTD", root_path %> > <%= link_to customer_path(@customer.id) do %> <%= @customer.ootd_id %> <% end %> > コーディネート一覧
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <div class="d-flex justify-content-center" style="">
+              <%= image_tag @customer.get_profile_image, size: "150x150" , class:"rounded-circle", style:"float: left" %>
+            </div>
+            <div class="d-flex justify-content-center mt-3 mb-3">
+              <% if customer_signed_in? %>
+                <% if current_customer.id == @customer.id %>
+                  <%= link_to '編集する', edit_customer_path(current_customer) , class:"btn-sm btn-info" %>
+                <% else %>
+                  <% if current_customer.following?(@customer) %>
+                    <%= link_to "フォロー中", customer_relationships_path(@customer.id), method: :delete, class:"btn btn-outline-secondary" %>
+                  <% else %>
+                    <%= link_to customer_relationships_path(@customer.id), method: :post, class:"btn-sm btn-info" do %>
+                    <i class="fas fa-user-plus"></i>フォローする
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <div class="col-3">
+            <strong class="" style="font-size:30px;" ><%= @customer.name %></strong></br>
+            <p class="mt-0" style="font-size:15px;">
+              @<%= @customer.ootd_id %>
+              <% if @customer.height.nil? %>
+              <% else %>
+                | <%= @customer.height %>cm
+              <% end %>
+              <% if @customer.gender.nil? %>
+              <% else %>
+                | <%= @customer.gender %>
+              <% end %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-8 offset-2 mb-4">
+    <div class="col-12 mt-4" style="border:solid 1px #ddd; background-color:#fff; border-radius:5px;">
+      <div class="row">
+        <div class="col-2" style="border-right:solid 1px #ddd;">
+          <strong><%= @post.count %></strong></br>
+          コーディネート
+        </div>
+        <div class="col-6"></div>
+        <div class="col-2" style="border-left:solid 1px #ddd;">
+          <%= link_to customer_followers_path(@customer.id) do %>
+            <strong><%= @customer.followers.count %></strong></br>
+            フォロワー
+          <% end %>
+        </div>
+        <div class="col-2 text-cnter" style="border-left:solid 1px #ddd;">
+          <%= link_to customer_followings_path(@customer.id) do %>
+            <strong><%= @customer.followings.count %></strong></br>
+            フォロー
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row">
+        <% @post.each do |post| %>
+          <div class="card col-3 mt-4 pl-0 pr-0 shadow-lg">
+            <%= link_to post_path(post.id) do %>
+              <%= image_tag post.get_image, style: "width:100%; height:350px;", class:"card-img-top"; %>
+            <% end %>
+            <div class="card-body pt-1 pb-0 ">
+              <div class="row">
+                <div class="col-2">
+                  <%= link_to customer_path(post.customer.id) do %>
+                    <%= image_tag post.customer.get_profile_image, size: "30x30" ,class:"rounded-circle" %>
+                  <% end %>
+                </div>
+                <div class="col-6">
+                  <span>
+                    <%= link_to customer_path(post.customer.id) , class:"text-dark text-decoration-none" do %>
+                      @<%= post.customer.ootd_id%>
+                    <% end %>
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 mt-2">
+                  <% if customer_signed_in? %>
+                    <% if post.favorited_by?(current_customer) %>
+                      <p>
+                        <%= link_to post_favorites_path(post), method: :delete ,class:"btn btn-danger" do %>
+                          <i class="fas fa-heart"></i> <%= post.favorites.count %>
+                        <% end %>
+                      </p>
+                    <% else %>
+                      <p>
+                        <%= link_to  post_favorites_path(post), method: :post ,class:"btn btn-outline-danger" do %>
+                          <i class="fas fa-heart"></i> <%= post.favorites.count %>
+                        <% end %>
+                      </p>
+                    <% end %>
+                 <% end %>
+                </div>
+                <div class="col-6 mt-2">
+                  <% if current_customer == @customer.id %>
+                    <%= link_to "削除", post_path(post.id), method: :delete, "data-confirm" => "本当に削除しますか？" ,class:"btn btn-danger" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

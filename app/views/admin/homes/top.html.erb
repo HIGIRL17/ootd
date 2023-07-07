@@ -1,0 +1,30 @@
+<%= stylesheet_pack_tag "homes" %>
+<div class="container  shadow-sm" style="width:100%; height:700px; margin-top:30px; background-color:#fff; border-radius:5px;">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="text-center mt-4"><strong>会員一覧</strong></h3>
+      <table class="table table-hover table-bordered mt-4">
+        <thead>
+          <tr>
+            <th class="col-3">登録日時</th>
+            <th class="col-3">会員名</th>
+            <th class="col-3">OOTD ID</th>
+            <th class="col-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @customer.each do |customer| %>
+          <tr>
+          <td><%= customer.created_at %></td>
+          <td><%= customer.last_name %><%= customer.first_name %></td>
+          <td><%= customer.ootd_id %></td>
+          <td>
+            <%= link_to "詳細", admin_customer_path(customer.id) ,class:"btn btn-primary" %>
+          </td>
+          </tr>
+          <% end %>
+        </tbody>
+        </table>
+    </div>
+  </div>
+</div>

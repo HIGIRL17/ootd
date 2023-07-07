@@ -1,0 +1,23 @@
+<div calss="container" style="width:100%; height:700px; margin-top:30px; background-color:#fff; border-radius:5px;">
+  <div class="d-flex justify-content-center font-weight-bold" style="text-center">
+    <p style="font-size:30px;">管理者ログイン</p>
+  </div>
+  <div class="row">
+    <div class="col-6 offset-3 form-group box">
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="field text-center">
+          <%= f.label :"メールアドレス" %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "col-md-6 offset-3 form-control" %>
+        </div>
+        <div class="field text-center">
+          <%= f.label :"パスワード" %>
+          <%= f.password_field :password, autocomplete: "current-password", class: "col-md-6 offset-3  form-control" %>
+        </div>
+        <div class="actions text-center mt-3">
+          <%= f.submit "ログイン" %>
+        </div>
+      <% end %>
+      <%= render "admin/shared/links" %>
+    </div>
+  </div>
+</div>

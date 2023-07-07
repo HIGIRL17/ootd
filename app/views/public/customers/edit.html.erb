@@ -1,0 +1,94 @@
+<div class="container" style="width:100%; height:1000px;">
+  <div class="row">
+    <div class="col-3">
+      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true" style="margin-top:50px;">プロフィール変更 ></a>
+        <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false"style="margin-top:50px;">メールアドレス変更 ></a>
+        <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false" style="margin-top:50px;">退会 ></a>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+          <div class="col-12" style="margin-top:50px; margin-left:50px;">
+            <%= form_with model: @customer ,url: customer_path  do |f| %>
+              <div class="form-group form-inline row font-weight-bold">
+                <%= f.label :"プロフィール画像", class: "col-md-3 d-flex justify-content-start" %>
+                <%= f.file_field :profile_image, placeholder: "プロフィール画像", accept: "image/*" %>
+              </div>
+              <div class="form-group form-inline row font-weight-bold">
+                <%= f.label :"OOTD ID", class: "col-md-3 d-flex justify-content-start" %>
+                <%= f.text_field :ootd_id, class: "col-md-3 form-control form-control-lg" %>
+              </div>
+              <div class="form-group form-inline row font-weight-bold">
+                <%= f.label :"ニックネーム", class: "col-md-3 d-flex justify-content-start" %>
+                <%= f.text_field :name, class: "col-md-3 form-control form-control-lg" %>
+              </div>
+              <div class="form-group form-inline row">
+                <%= f.label :"性別" ,class: "col-md-3 d-flex justify-content-start font-weight-bold"%>
+                <%= f.radio_button :gender, Customer.genders.key(0), checked: "checked" , class:"ml-3" %>
+                <%= f.label :男性 %> </br>
+                <%= f.radio_button :gender, Customer.genders.key(1),class:"ml-3" %>
+                <%= f.label :女性%>
+                <%= f.radio_button :gender, Customer.genders.key(2),class:"ml-3" %>
+                <%= f.label :キッズ%>
+              </div>
+              <div class="form-group form-inline row font-weight-bold">
+                <%= f.label :"身長", class: "col-md-3 d-flex justify-content-start" %>
+                <%= f.text_field :height, class: "col-md-3 form-control form-control-lg" %>cm
+              </div>
+              <%= f.submit "変更を保存" , class:"btn btn-success" %>
+            <% end %>
+            <% if @customer.released? %>
+              <%= link_to '非公開にする',nonrelease_path, method: :patch%>
+            <% else %>
+              <%= link_to '公開する',release_path, method: :patch%>
+            <% end %>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+          <div class="container">
+            <div class="row">
+              <div class="col-12 d-flex align-items-center justify-content-center" style="margin-top:70px;">
+                <%= form_with model: @customer ,url: customer_path  do |f| %>
+                <div class="form-group form-inline row font-weight-bold">
+                  <%= f.label :"現在のメールアドレス" , class: "col-md-5 d-flex justify-content-start" %>
+                  <%= @customer.email %>
+                </div>
+                <div class="form-group form-inline row font-weight-bold">
+                  <%= f.label :"メールアドレス", class: "col-md-5 d-flex justify-content-start" %></br>
+                  <%= f.text_field :email, class: "col-md-7 form-control form-control-lg" %>
+                </div>
+                <div class="row">
+                  <div class="col-12 d-flex align-items-center justify-content-center">
+                    <%= f.submit "変更を保存" , class:"btn btn-success" %>
+                  </div>
+                </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+          <div class="container">
+            <div class="row">
+              <div class="col-12" style="margin-top:10px; margin-left:50px;">
+                <h2 class="text-center mt-5">本当に退会しますか？</h2>
+                <h4 class="text-center mt-5">
+                  ・退会処理後は同じアカウントのご利用ができなくなります。</br>
+                  ・退会処理を行った場合、友達検索結果に表示されなくなり、ID・プロフィールも他のユーザーから閲覧できなくなります。
+                </h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex align-items-center justify-content-center">
+                <%= link_to "退会しない" ,customer_path, class:"btn btn-primary mr-3 mt-2" %>
+                <%= link_to "　退会する　", withdraw_path(@customer), method: :PATCH, data: {confirm: "本当に退会してもよろしいですか？"}, class: " btn btn-danger mt-2" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,169 @@
+<div class=="container shadow-sm" style="width:100%; height:100%;  background-color:#f6f7f8; border-radius:5px;">
+  <div class="row">
+    <div class="col-12 pt-3" style="border-bottom:solid 1px #ddd; background-color:#fff;">
+      <div class="col-8 offset-2">
+        <div class="mb-4">
+          <%= link_to "OOTD", root_path %> > <%= link_to customer_path(@customer.id) do %> <%= @customer.ootd_id %> <% end %> > コーディネート一覧
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <div class="d-flex justify-content-center" style="">
+              <%= image_tag @customer.get_profile_image, size: "150x150" , class:"rounded-circle", style:"float: left" %>
+            </div>
+            <div class="d-flex justify-content-center mt-3 mb-3">
+              <% if customer_signed_in? %>
+                <% if current_customer.id == @customer.id %>
+                  <%= link_to '編集する', edit_customer_path(current_customer) , class:"btn-sm btn-info" %>
+                <% else %>
+                  <% if current_customer.following?(@customer) %>
+                    <%= link_to "フォロー中", customer_relationships_path(@customer.id), method: :delete, class:"btn btn-outline-secondary" %>
+                  <% else %>
+                    <%= link_to customer_relationships_path(@customer.id), method: :post, class:"btn-sm btn-info" do %>
+                    <i class="fas fa-user-plus"></i>フォローする
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <div class="col-3">
+            <strong class="" style="font-size:30px;" ><%= @customer.name %></strong></br>
+            <p class="mt-0" style="font-size:15px;">
+              @<%= @customer.ootd_id %>
+              <% if @customer.height.nil? %>
+              <% else %>
+                | <%= @customer.height %>cm
+              <% end %>
+              <% if @customer.gender.nil? %>
+              <% else %>
+                | <%= @customer.gender %>
+              <% end %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-8 offset-2">
+    <div class="row">
+      <div class="col-7 mb-3" style="margin-top:20px;">
+        <div class="card">
+          <%= image_tag @post.get_image, style: "width:100%; height:700px;", class:"card-img-top"; %>
+          <div class="card-body pt-1 pb-0 ">
+            <div class="col-12 mt-3">
+              <div class="">
+                <td><i class="fas fa-tag"></i><%= @tags %>
+              </div>
+              <div class="row">
+                <div class="col-7">
+                  <% @favorites.first(5).each do |favorite| %>
+                     <%= image_tag favorite.customer.get_profile_image, size: "50x50" , class:"rounded-circle ml-2", style:"float: left" %>
+                  <% end %>
+                </div>
+
+                <div class="col-5 d-flex justify-content-end">
+                  <p>
+                    <%= link_to  post_fovorites_path(@post.id) ,class:"btn btn-info mt-1" do %>
+                      <i class="fas fa-list-ul"></i>
+                    <% end %>
+                  </p>
+                  <% if customer_signed_in? %>
+                    <% if @post.favorited_by?(current_customer) %>
+                      <p>
+                        <%= link_to post_favorites_path(@post), method: :delete ,class:"btn btn-danger mt-1" do %>
+                          <i class="fas fa-heart"></i> <%= @post.favorites.count %>
+                        <% end %>
+                      </p>
+                    <% else %>
+                      <p>
+                        <%= link_to  post_favorites_path(@post), method: :post ,class:"btn btn-outline-danger mt-1" do %>
+                          <i class="fas fa-heart"></i> <%= @post.favorites.count %>
+                        <% end %>
+                      </p>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+              <% if current_customer.id == @customer.id %>
+                <div class="row">
+                 <div class="mt-3 mb-3"><%= link_to '編集する', edit_post_path(@post.id) , class:"btn-sm btn-info" %></div>
+                 <div class="mt-3 mb-3 ml-2"><%= link_to "削除", post_path(@post.id), method: :delete, "data-confirm" => "本当に削除しますか？" ,class:"btn-sm btn-danger" %></div>
+                </div>
+              <% end %>
+            </div>
+            <div class="col-12 pt-4 mb-4" style="border-top:solid 1px #ddd;">
+              <strong><%= @post.customer.name %></strong>へのコメント
+            </div>
+            <div class="row">
+              <div class="col-12 mb-5">
+                <% if @post.post_comments.count == 0 %>
+                  <h4 class="d-flex justify-content-center mt-5 mb-5">NO COMMENT</h4>
+                <% else %>
+                 <div class="row">
+                    <% @post.post_comments.each do |post_comment| %>
+                      <p class="col-1">
+                        <%= image_tag post_comment.customer.get_profile_image, size: "30x30" , class:"rounded-circle" %>
+                      </p>
+                      <div class="col-2">
+                        <strong><%= post_comment.customer.name %></strong>
+                      </div>
+                      <div class="col-7">
+                        <%= post_comment.comment %>
+                      </div>
+                      <% if post_comment.customer == current_customer %>
+                        <div class="col-2">
+                          <div id="navbarNavDropdown">
+                            <ul class="navbar-nav ml-auto">
+                              <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark pt-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><%= post_comment.created_at.strftime('%m/%d') %></a>
+                                <div class="dropdown-menu text-center">
+                                  <%= link_to "コメント削除", post_post_comment_path(post_comment.post, post_comment), method: :delete ,class:"btn btn-danger" %>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      <% else %>
+                        <duv class="col-2">
+                          <%= post_comment.created_at.strftime('%m/%d') %>
+                        </duv>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+              <% if customer_signed_in? %>
+                <div class="col-12 mb-3">
+                  <%= form_with model: [@post, @post_comment] do |f| %>
+                    <div class="row">
+                      <div class="col-9"><%= f.text_area :comment, rows: '1', placeholder: "コメントをここに", class:"form-control form-control-lg" %></div>
+                      <div class="col-3 ml-0 mt-1"><%= f.submit "送信する",class: "btn btn-info" %></div>
+                    </div>
+                  <% end %>
+                </div>
+              <% else %>
+                <div class="col-12">
+                  <p class="text-center pt-5 mb-5" style="border-top:solid 1px #ddd;">
+                    コメントするためには<%= link_to "新規会員登録",new_customer_registration_path %>または<%= link_to "ログイン" ,new_customer_session_path %>が必要です
+                  </p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-5" style="border:solid 1px #ddd; background-color:#fff; height:300px; width:100%; margin-top:20px;">
+        <div class="col-10 offset-1 mt-3">
+          <h5><strong><%= @post.customer.name %>さんのコーディネート</strong></h5>
+          <p style="border-bottom:solid 1px #ddd;">モデル情報:<%= @post.customer.height %>cm</p>
+        </div>
+        <div class="col-10 offset-1 mt-3">
+          <p><%= @post.caption %></p>
+        </div>
+        <div class="col-10 offset-1 mt-3" style="border-top:solid 1px #ddd;">
+          <i class="far fa-clock"></i><%= @post.created_at.strftime('%y/%m/%d') %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

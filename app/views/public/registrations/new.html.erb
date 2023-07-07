@@ -1,0 +1,81 @@
+<div class="mx-auto container shadow-sm" style="width:100%; height:700px; margin-top:30px; background-color:#fff; border-radius:5px;">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-center font-weight-bold" style="text-center">
+        <p style="font-size:30px; margin-top:30px;">新規会員登録</p>
+      </div>
+      <% if @customer.errors.any? %>
+        <div class="alert alert-warning">
+          <ul>
+            <% @customer.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <%= form_with model: @customer, url: customer_registration_path, id: 'new_customer', class: 'new_customer', method: :post do |f| %>
+        <div class="form-group form-inline row font-weight-bold mt-2">
+          <%= f.label :"OOTD ID", class: "col-3 d-flex justify-content-start" %>
+          <div class="field col-3">
+            <%= f.text_field :ootd_id, autofocus: true, class: "col-auto form-control form-control-lg w-100" %>
+          </div>
+        </div>
+
+        <div class="form-group form-inline row font-weight-bold">
+          <%= f.label :"ニックネーム", class: "col-3 d-flex justify-content-start" %>
+          <div class="field col-3">
+            <%= f.text_field :name, class: "col-auto form-control form-control-lg w-100" %>
+          </div>
+        </div>
+
+        <div class="form-group form-inline row font-weight-bold">
+          <div class="col-3 d-flex justify-content-between">
+            <%= f.label :名前 %>
+            <%= f.label:"(姓)" %>
+          </div>
+          <div class="field col-3">
+            <%= f.text_field :last_name, class: "col-auto form-control form-control-lg w-100" %>
+          </div>
+          <%= f.label :"(名)　", class: "col-md-auto" %>
+          <div class="field col-3">
+            <%= f.text_field :first_name, class: "col-auto form-control form-control-lg w-100" %>
+          </div>
+        </div>
+
+        <div class="form-group form-inline row font-weight-bold">
+          <%= f.label :"メールアドレス", class: "col-3 d-flex justify-content-start" %>
+          <div class="field col-3">
+            <%= f.email_field :email, autocomplete: "email", class: "col-auto form-control form-control-lg w-100" %>
+          </div>
+        </div>
+
+        <div class="form-group form-inline row font-weight-bold">
+          <%= f.label :"パスワード" , class: "col-3 d-flex justify-content-start"%>
+          <% if @minimum_password_length %>
+          <% end %>
+          <div class="field col-3">
+            <%= f.password_field :password, autocomplete: "new-password" , class: "col-auto form-control form-control-lg w-100"%>
+          </div>
+        </div>
+
+        <div class="form-group form-inline row font-weight-bold">
+          <%= f.label :"パスワード確認用" , class: "col-3 d-flex justify-content-start"%>
+          <div class="field col-3">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "col-auto form-control form-control-lg w-100" %>
+          </div>
+        </div>
+
+        <div class="actions text-center">
+          <%= f.submit "新規登録",class:"btn btn-info mt-3" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+

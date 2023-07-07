@@ -1,0 +1,7 @@
+ ja:
+    enums:
+      customer:
+        gender:
+          men: "男性"
+          woomen: "女性"
+          kids: "キッズ"

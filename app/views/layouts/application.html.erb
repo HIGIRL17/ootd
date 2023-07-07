@@ -1,16 +1,99 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ootd</title>
+    <title>#Ootd</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+    <%= stylesheet_pack_tag 'application',  'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
+  <body class="<%= controller.controller_name %>">
+    <header class="shadow-sm bg-dark text-white pt-2 pb-2">
+      <nav class="navbar navbar-expand-lg navbar-light d-flex justify-content-center">
+      <div class="search-form">
+        <%= form_with url: search_path, method: :get, local: true do |f| %>
+          <%= f.text_field :keyword, value: @keyword %>
+          <%= f.submit "検索" %>
+        <% end %>
+      </div>
 
-  <body>
+        <div class="position-absolute top-0 start-50 translate-middle"><%= link_to "#OOTD" ,root_path,class:"text-light text-decoration-none",style:"font-size:60px;"%></div>
+        <div class="container">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ml-auto">
+              <% if customer_signed_in? %>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle  text-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@<%= current_customer.ootd_id %></a>
+                  <div class="dropdown-menu">
+                    <%= link_to customer_path(current_customer), class: 'nav-link text-dark' do %>
+                      <i class="fas fa-user"></i> マイページ
+                    <% end %>
+                    <%= link_to new_post_path, class: 'nav-link text-dark' do %>
+                      <i class="fas fa-plus-square"></i> 投稿
+                    <% end %>
+                    <%= link_to edit_customer_path(current_customer), class: 'nav-link text-dark' do %>
+                      <i class="fas fa-user-cog"></i> ユーザー設定
+                    <% end %>
+                    <div class="dropdown-divider"></div>
+                    <%= link_to destroy_customer_session_path , method: :delete, class: 'nav-link text-dark' do %>
+                      <i class="fas fa-sign-out-alt"></i>ログアウト
+                    <% end %>
+                  </div>
+                </li>
+              <% elsif admin_signed_in? %>
+                <li class="nav-link">
+                  <%= link_to "管理者トップページ", admin_root_path, class: 'nav-link text-light' %>
+                </li>
+                <li class="nav-link">
+                  <%= link_to destroy_admin_session_path , method: :delete, class: 'nav-link text-light' do %>
+                    <i class="fas fa-sign-out-alt"></i>ログアウト
+                  <% end %>
+                </li>
+              <% else %>
+                <li class="nav-item">
+                  <%= link_to "新規登録",new_customer_registration_path, class: 'nav-link text-light' %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to "ログイン" , customer_session_path, class: 'nav-link text-light' %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <p class="notice" style="background-color:#fff; margin-bottom:0;"><%= notice %></p>
+      <p class="alert" style="background-color:#fff; margin-bottom:0;"><%= alert %></p>
     <%= yield %>
+    </main>
+    <footer class="bg-dark text-white pt-2 pb-2">
+      <div class="container">
+        <div class="row no-gutters">
+          <div class="col-md-4">
+            <p></p>
+          </div>
+          <div class="col-md-8">
+            <h6 class="text-white mt-2 mb-3">Link</h6>
+            <ul class="p-0 list-unstyled">
+              <li>
+                <a href="" title="About" class="text-white-50">会社概要</a>
+              </li>
+              <li>
+                <a href="" title="License informations" class="text-white-50">プライバシーポリシー</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

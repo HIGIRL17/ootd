@@ -1,0 +1,32 @@
+<%= stylesheet_pack_tag "posts" %>
+<div class="container shadow-sm" style="width:100%; height:700px; margin-top:30px; background-color:#fff; border-radius:5px; ">
+  <div class="row">
+    <div class="col-6 offset-3 form-group box" style="margin-top:50px;">
+      <%= form_with model: @post , url: post_path(@post.id), method: :patch  do |f| %>
+        <h4 class="text-center" style="margin-top:20px;">
+          <strong>
+            コーデ画像を選択
+          </strong>
+        </h4>
+        <div class="col-6 offset-3" style="margin-top:30px;">
+          <%= f.file_field :image, accept: "image/*" %>
+        </div>
+        <h4 class="text-center" style="margin-top:30px;">
+          <strong>
+            コメント
+          </strong>
+        </h4>
+        <%= f.text_area:caption , class:"form-control form-control-lg", rows:8, style:"margin-top:30px;" %>
+        <h4 class="text-center" style="margin-top:20px;">
+          <strong>
+            タグ付け
+          </strong>
+        </h4>
+        <%= f.text_field:tag , class:"form-control form-control-lg", placeholder: "タグが複数の場合は”,”で区切ってください", style:"margin-top:30px;" %>
+        <div class="text-center mt-3">
+          <%= f.submit '投稿する' ,class:"btn btn-info " %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

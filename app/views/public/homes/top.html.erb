@@ -1,0 +1,103 @@
+<div class="mx-auto container shadow-sm" style="width:100%; height:100%;  background-color:#fff; border-radius:5px;">
+  <div class="row">
+    <div class="col-12">
+      <ul class="d-flex" style="list-style:none; font-size:30px; border-bottom: 1px solid #000000;  border-top: 1px solid #000000; margin-top:20px; justify-content: space-around;">
+        <li><%= link_to "ALL", root_path %></li>
+        <li><%= link_to "MEN", root_path(gender: "MEN") %></li>
+        <li><%= link_to "WOMEN", root_path(gender: "WOMEN") %></li>
+        <li><%= link_to "KIDS", root_path(gender: "KIDS") %></li>
+      </ul>
+    </div>
+    <div class="col-2">
+      <table class="table table-bordered">
+        <tr>
+          <th>タグ検索</th>
+        </tr>
+        <% @tags.each do |tag| %>
+          <tr>
+            <td>
+              <%= link_to tag_path(tag) do %>
+                <i class="fas fa-tag"></i><%= tag.name %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+    <div class="col-10">
+      <div class="col-6 offset-3">
+        <div class="row">
+          <div class="col-4 text-center pt-1 pb-1" style="border:solid 1px #ddd; background-color:#333333; border-radius:5px 0 0 5px; color:#F5F5F5;">
+            新着
+          </div>
+          <div class="col-4 text-center pt-1 pb-1" style="border:solid 1px #ddd; border-radius:0 5px 5px 0; position:relative;">
+            <% if customer_signed_in? %>
+              <%= link_to "タイムライン" , timeline_path , style: "display: block; position: absolute; width:100%; height:100%; top:0; left:0; padding-top:2px; text-decoration: none; color:#808080;"  %>
+            <% else %>
+              <%= link_to "タイムライン" , new_customer_session_path , style: "display: block; position: absolute; width:100%; height:100%; top:0; left:0; padding-top:2px; text-decoration: none; color:#808080;"  %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <% @posts.each do |post| %>
+          <div class="card col-3 ml-5 mt-4 pl-0 pr-0 shadow-lg">
+            <%= link_to post_path(post.id) do %>
+              <%= image_tag post.get_image, style: "width:100%; height:300px;", class:"card-img-top"; %>
+            <% end %>
+            <div class="card-body pt-1 pb-0 ">
+              <div class="row">
+                <div class="col-2">
+                  <%= link_to customer_path(post.customer.id) do %>
+                    <%= image_tag post.customer.get_profile_image, size: "30x30" ,class:"rounded-circle" %>
+                  <% end %>
+                </div>
+                <div class="col-6">
+                  <span>
+                    <%= link_to customer_path(post.customer.id) , class:"text-dark text-decoration-none" do %>
+                      @<%= post.customer.ootd_id%>
+                    <% end %>
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-7 mt-2">
+                  <p class="card-title" style="vertical-align:middle">
+                    <% if customer_signed_in? %>
+                      <% if current_customer.following?(post.customer) %>
+                        <%= link_to "フォロー中", customer_relationships_path(post.customer), method: :delete, class:"btn-sm btn-outline-secondary" %>
+                      <% elsif current_customer.id == post.customer.id %>
+                        <%= link_to "削除", post_path(post.id), method: :delete, "data-confirm" => "本当に削除しますか？" ,class:"btn-sm btn-danger" %>
+                      <% else %>
+                        <%= link_to customer_relationships_path(post.customer), method: :post, class:"btn-sm btn-info" do %>
+                          フォロー
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                  </p>
+                </div>
+                <div class="col-5">
+                  <% if customer_signed_in? %>
+                    <% if post.favorited_by?(current_customer) %>
+                      <p>
+                        <%= link_to post_favorites_path(post), method: :delete ,class:"btn btn-danger" do %>
+                          <i class="fas fa-heart"></i> <%= post.favorites.count %>
+                        <% end %>
+                      </p>
+                    <% else %>
+                      <p>
+                        <%= link_to  post_favorites_path(post), method: :post ,class:"btn btn-outline-danger" do %>
+                          <i class="fas fa-heart"></i> <%= post.favorites.count %>
+                        <% end %>
+                      </p>
+                    <% end %>
+                 <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
