@@ -22,7 +22,7 @@ class Public::CustomersController < ApplicationController
   def withdraw
     @customer = current_customer
     @customer.update(is_deleted: true)
-    @customer.posts.update_all(is_deleted: true)
+    #@customer.posts.update_all(is_deleted: true)
     reset_session
     redirect_to root_path
   end
