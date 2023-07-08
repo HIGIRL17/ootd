@@ -49,7 +49,10 @@ class Public::PostsController < ApplicationController
 
   def search
     @tags = Tag.all
-    @posts = Post.search(params[:keyword])
+    #@posts = Post.caption_search(params[:keyword])
+    post_result1 = Post.caption_search(params[:keyword])
+    post_result2 = Post.customer_search(params[:keyword])
+    @posts = (post_result1 + post_result2).uniq
     @keyword = params[:keyword]
     render "index"
   end

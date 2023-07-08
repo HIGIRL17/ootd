@@ -13,7 +13,7 @@ class Customer < ApplicationRecord
 
   has_many :followings, through: :relationships, source: :followed
   has_many :followers, through: :reverse_of_relationships, source: :follower
-
+  
   validates :ootd_id, uniqueness: true
 
   enum status:{nonreleased: 0, released: 1}

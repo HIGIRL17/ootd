@@ -21,15 +21,20 @@ class Post < ApplicationRecord
     favorites.exists?(customer_id: customer.id)
   end
 
-  def self.search(keyword)
-    where(["caption like?" ,"%#{keyword}%"])
+  def self.caption_search(keyword)
+    where(["caption like ?" ,"%#{keyword}%"])
   end
-  
-  def self.search(keyword)
-    Tag.where(["name like?" ,"%#{keyword}%"])
+
+  def self.customer_search(keyword)
+    Post.joins(:customer).where(customer: { ootd_id: keyword })
   end
-  
-  
+
+  def self.tag_search(keyword)
+    #Tag.where(["name like?" ,"%#{keyword}%"])
+    Post.joins(:tags).merge(Tag.where('name like ?', "%#{keyword}%"))
+  end
+
+
   def save_tags(tags)
     tags.each do |new_tags|
       # selfは明示的に記載していてこの場合だとコントローラーの@postになる
@@ -60,7 +65,7 @@ class Post < ApplicationRecord
       #　　　　　　 b             a b c
       old_tags = current_tags - latest_tags
       #一致したものを取り出す
-      # a c       a b c            b 
+      # a c       a b c            b
       new_tags = latest_tags - current_tags
 
       # a  c
